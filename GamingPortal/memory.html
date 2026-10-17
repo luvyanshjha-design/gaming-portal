@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Test</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: white;
+            color: #222;
+            padding: 35px 20px;
+        }
+
+        main {
+            max-width: 500px;
+            margin: 40px auto;
+        }
+
+        a {
+            color: #777;
+            text-decoration: none;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        #number {
+            font-size: 70px;
+            font-weight: bold;
+            margin: 45px 0;
+            letter-spacing: 5px;
+        }
+
+        input {
+            padding: 14px;
+            width: 100%;
+            font-size: 20px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 14px 25px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #message {
+            margin-top: 25px;
+            line-height: 1.6;
+        }
+
+        .muted {
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <a href="index.html">← Back to homepage</a>
+
+    <h1>🧠 Memory Test</h1>
+    <p class="muted">Memorize the number before it disappears!</p>
+
+    <div id="number">Ready?</div>
+
+    <input id="answer" type="text"
+           inputmode="numeric"
+           placeholder="Enter the number"
+           autocomplete="off"
+           hidden>
+
+    <button id="start">Start Game</button>
+
+    <div id="message">How many digits can you remember?</div>
+</main>
+
+<script>
+    const numberDisplay = document.getElementById("number");
+    const answerInput = document.getElementById("answer");
+    const startButton = document.getElementById("start");
+    const message = document.getElementById("message");
+
+    let currentNumber = "";
+    let level = 3;
+    let playing = false;
+
+    startButton.addEventListener("click", () => {
+        if (playing) {
+            checkAnswer();
+        } else {
+            startRound();
+        }
+    });
+
+    function startRound() {
+        playing = true;
+        currentNumber = "";
+
+        for (let i = 0; i < level; i++) {
+            currentNumber += Math.floor(Math.random() * 10);
+        }
+
+        numberDisplay.textContent = currentNumber;
+        answerInput.value = "";
+        answerInput.hidden = true;
+        startButton.hidden = true;
+        message.textContent = "Memorize it!";
+
+        setTimeout(() => {
+            numberDisplay.textContent = "???";
+            answerInput.hidden = false;
+            answerInput.focus();
+            startButton.hidden = false;
+            startButton.textContent = "Submit";
+            message.textContent = "Type the number you remember!";
+        }, 2000 + level * 300);
+    }
+
+    function checkAnswer() {
+        if (!playing || answerInput.hidden) return;
+
+        playing = false;
+        const correct = answerInput.value === currentNumber;
+
+        if (correct) {
+            level++;
+            numberDisplay.textContent = "✓";
+            message.textContent =
+                "Correct! Next round: " + level + " digits.";
+        } else {
+            numberDisplay.textContent = "✗";
+            message.textContent =
+                "The number was " + currentNumber +
+                ". You reached " + (level - 1) + " digits.";
+            level = 3;
+        }
+
+        answerInput.hidden = true;
+        startButton.textContent = "Play Again";
+    }
+
+    answerInput.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !answerInput.hidden) {
+            checkAnswer();
+        }
+    });
+</script>
+</body>
+</html>
