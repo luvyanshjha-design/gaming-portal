@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE UNKNOWN</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #050608;
+            color: #d7dbe4;
+            font-family: "Courier New", monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+        }
+
+        main {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .status {
+            color: #657b83;
+            font-size: 12px;
+            letter-spacing: 3px;
+            margin-bottom: 50px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #80e8b1;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 12px #80e8b1;
+        }
+
+        h1 {
+            font-size: clamp(40px, 9vw, 75px);
+            letter-spacing: 8px;
+            margin: 0 0 12px;
+            color: #fff;
+        }
+
+        .subtitle {
+            color: #626b7a;
+            letter-spacing: 3px;
+            font-size: 12px;
+        }
+
+        .line {
+            height: 1px;
+            background: #252a33;
+            margin: 35px 0;
+        }
+
+        #transmission {
+            min-height: 110px;
+            color: #aab4c5;
+            line-height: 2;
+            white-space: pre-line;
+        }
+
+        .signal {
+            color: #80e8b1;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid #39434c;
+            color: #d7dbe4;
+            padding: 14px 20px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #151a20;
+            border-color: #80e8b1;
+        }
+
+        #investigate {
+            margin-top: 20px;
+        }
+
+        #puzzle {
+            display: none;
+            margin-top: 35px;
+            padding: 25px;
+            border: 1px solid #252a33;
+            background: #090c10;
+        }
+
+        #puzzle h2 {
+            font-size: 16px;
+            color: #80e8b1;
+            font-weight: normal;
+        }
+
+        .clue {
+            color: #929eae;
+            line-height: 2;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            margin-top: 15px;
+            padding: 14px;
+            background: #050608;
+            color: white;
+            border: 1px solid #39434c;
+            font-family: inherit;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #80e8b1;
+        }
+
+        #submit {
+            margin-top: 12px;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #80e8b1;
+        }
+
+        #classified {
+            display: none;
+            margin-top: 35px;
+            padding: 25px;
+            border: 1px solid #80e8b1;
+            background: #0b1512;
+        }
+
+        #classified h2 {
+            color: #80e8b1;
+        }
+
+        footer {
+            margin-top: 55px;
+            color: #414956;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        .glitch {
+            animation: glitch 0.25s linear 2;
+        }
+
+        @keyframes glitch {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+            75% { transform: translateX(-2px); }
+            100% { transform: translateX(0); }
+        } #riddleForm.shake {
+                      animation: reject 0.35s;
+                  }
+
+        @keyframes reject {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-9px); }
+            50% { transform: translateX(9px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        #riddleFeedback {
+            color: #ff7777;
+            font-size: 13px;
+        }
+
+        #riddleFeedback.victory {
+            color: #80e8b1;
+        }
+    </style>
+</head>
+
+<body>
+
+<main id="main">
+
+    <div class="status">
+        <span class="dot"></span>
+        SIGNAL DETECTED
+    </div>
+
+    <h1>THE UNKNOWN</h1>
+    <div class="subtitle">UNIDENTIFIED TRANSMISSION // 001</div>
+
+    <div class="line"></div>
+
+    <div id="transmission">
+        Incoming transmission detected...
+
+        <span class="signal">SOURCE: UNKNOWN</span>
+    </div>
+
+    <button id="investigate">INTERCEPT SIGNAL →</button>
+
+    <section id="puzzle">
+        <h2>TRANSMISSION FRAGMENT 001</h2>
+
+        <p class="clue">
+            Four words survived the transmission.<br>
+            The sender left a message hidden inside them.<br><br>
+
+            <span class="signal">S</span>ilent skies above us.<br>
+            <span class="signal">E</span>very signal fades.<br>
+            <span class="signal">N</span>othing stays hidden forever.<br>
+            <span class="signal">D</span>o you understand?
+            <br><br>
+
+            The first letters matter.
+        </p>
+
+        <input
+                id="answer"
+                type="text"
+                placeholder="Enter the hidden message..."
+                autocomplete="off"
+                maxlength="30"
+        >
+
+        <button id="submit">DECODE</button>
+
+        <div id="feedback"></div>
+    </section>
+
+    <section id="classified">
+        <h2>FILE UNLOCKED</h2>
+
+        <p>
+            FILE: 001-A<br>
+            STATUS: PARTIALLY RECOVERED
+        </p>
+
+        <div class="line"></div>
+
+        <p>
+            The first transmission was not a warning.
+        </p>
+
+        <p class="signal">
+            IT WAS A REPLY.
+        </p>
+
+        <p>
+            Someone—or something—sent the original signal
+            before anyone on Earth began listening.
+        </p>
+
+        <p>
+            But the recovered message contains one final line:
+        </p>
+
+        <p class="signal">
+            "WE HAVE BEEN HERE BEFORE."
+        </p>
+
+        <button id="continue">INVESTIGATE FURTHER →</button>
+
+
+        <div id="nextClue" style="display:none">
+            <div class="line"></div>
+            <p>TRANSMISSION 002</p>
+            <p>What has a face, but no eyes?</p>
+            <p class="signal">The next clue is closer than you think.</p>
+            <p>Some answers are hiding in plain sight.</p>
+
+            <form id="riddleForm">
+                <input
+                        id="riddleAnswer"
+                        type="text"
+                        placeholder="ENTER YOUR ANSWER..."
+                        autocomplete="off"
+                >
+                <button type="submit">SUBMIT</button>
+            </form>
+
+            <p id="riddleFeedback" aria-live="polite"></p>
+        </div>
+        ```
+
+        </div>
+    </section>
+
+    <footer>
+        END OF TRANSMISSION // CONNECTION OPEN
+    </footer>
+
+</main>
+
+<script>
+    const transmission = document.getElementById("transmission");
+    const investigate = document.getElementById("investigate");
+    const puzzle = document.getElementById("puzzle");
+    const answer = document.getElementById("answer");
+    const submit = document.getElementById("submit");
+    const feedback = document.getElementById("feedback");
+    const classified = document.getElementById("classified");
+    const continueButton = document.getElementById("continue");
+    const nextClue = document.getElementById("nextClue");
+
+    let intercepted = false;
+
+    investigate.addEventListener("click", () => {
+        if (intercepted) {
+            puzzle.style.display = "block";
+            puzzle.scrollIntoView({ behavior: "smooth" });
+            return;
+        }
+
+        intercepted = true;
+        transmission.classList.add("glitch");
+
+        transmission.textContent =
+            "TRANSMISSION DECODED.\n\n" +
+            "We tried to contact you.\n" +
+            "You were not supposed to answer.\n\n" +
+            "A message fragment has been recovered.";
+
+        investigate.textContent = "VIEW MESSAGE FRAGMENT →";
+
+        setTimeout(() => {
+            transmission.classList.remove("glitch");
+            puzzle.style.display = "block";
+            puzzle.scrollIntoView({ behavior: "smooth" });
+        }, 500);
+    });
+
+    // PUZZLE 1: Decode SEND
+    function decode() {
+        const guess = answer.value.trim().toUpperCase();
+
+        if (guess === "SEND") {
+            feedback.textContent = "MESSAGE ACCEPTED. FILE DECRYPTED.";
+            classified.style.display = "block";
+            classified.scrollIntoView({ behavior: "smooth" });
+
+            answer.disabled = true;
+            submit.disabled = true;
+        } else {
+            feedback.textContent =
+                "SIGNAL REJECTED. Look at the beginning of each line.";
+        }
+    }
+
+    submit.addEventListener("click", decode);
+
+    answer.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            decode();
+        }
+    });
+
+    // Reveal the second riddle
+    continueButton.addEventListener("click", () => {
+        nextClue.style.display = "block";
+        continueButton.style.display = "none";
+        nextClue.scrollIntoView({ behavior: "smooth" });
+    });
+
+    // PUZZLE 2: Solve CLOCK
+    const riddleForm = document.getElementById("riddleForm");
+    const riddleAnswer = document.getElementById("riddleAnswer");
+    const riddleFeedback = document.getElementById("riddleFeedback");
+
+    riddleForm.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const guess = riddleAnswer.value.trim().toLowerCase();
+
+        if (guess === "clock") {
+            riddleFeedback.textContent = "ACCESS GRANTED";
+            riddleFeedback.classList.add("victory");
+
+            riddleAnswer.disabled = true;
+            riddleForm.querySelector("button").disabled = true;
+
+            const victory = document.createElement("p");
+            victory.className = "signal";
+            victory.textContent =
+                "TRANSMISSION 002 COMPLETE. BUT THIS IS ONLY THE BEGINNING...";
+
+            riddleForm.after(victory);
+        } else {
+            riddleFeedback.textContent = "ANSWER REJECTED. TRY AGAIN.";
+
+            riddleForm.classList.remove("shake");
+            void riddleForm.offsetWidth;
+            riddleForm.classList.add("shake");
+
+            riddleAnswer.select();
+        }
+    });
+</script>
+
+</body>
+</html>

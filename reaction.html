@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reaction Time</title>
+
+    ```
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 20px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #fff;
+            color: #222;
+        }
+
+        main {
+            max-width: 650px;
+            margin: 40px auto;
+        }
+
+        a {
+            color: #777;
+            text-decoration: none;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        #arena {
+            width: 100%;
+            height: 300px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 12px;
+            background: #ed5555;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        #arena.ready {
+            background: #35b86b;
+        }
+
+        #arena.waiting {
+            background: #ed5555;
+        }
+
+        #result {
+            margin-top: 22px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .hint {
+            color: #777;
+            line-height: 1.6;
+        }
+    </style>
+    ```
+
+</head>
+
+<body>
+<main>
+    <a href="index.html">← Back to homepage</a>
+
+    ```
+    <h1>⚡ Reaction Time</h1>
+    <p class="hint">Click the box to begin. When it turns green, click as fast as you can!</p>
+
+    <button id="arena">CLICK TO START</button>
+
+    <div id="result">Your best: —</div>
+    <p class="hint" id="history">Let's see how fast you are.</p>
+    ```
+
+</main>
+
+<script>
+    const arena = document.getElementById("arena");
+    const result = document.getElementById("result");
+    const history = document.getElementById("history");
+
+    let state = "start";
+    let startTime = 0;
+    let timer;
+    let best = null;
+
+    arena.addEventListener("click", () => {
+        if (state === "start" || state === "result" || state === "early") {
+            clearTimeout(timer);
+            state = "waiting";
+            arena.className = "waiting";
+            arena.textContent = "WAIT FOR GREEN...";
+            result.textContent = "Get ready!";
+            history.textContent = "Don't click until the box turns green.";
+
+            timer = setTimeout(() => {
+                state = "ready";
+                startTime = performance.now();
+                arena.className = "ready";
+                arena.textContent = "CLICK NOW!";
+            }, 1500 + Math.random() * 3000);
+
+        } else if (state === "waiting") {
+            clearTimeout(timer);
+            state = "early";
+            arena.className = "";
+            arena.textContent = "TOO SOON! TRY AGAIN";
+            result.textContent = "False start!";
+            history.textContent = "Wait for green next time.";
+
+        } else if (state === "ready") {
+            const reaction = Math.round(performance.now() - startTime);
+            state = "result";
+            arena.className = "";
+            arena.textContent = "PLAY AGAIN";
+
+            if (best === null || reaction < best) {
+                best = reaction;
+                result.textContent = reaction + " ms — NEW BEST!";
+            } else {
+                result.textContent = reaction + " ms";
+            }
+
+            history.textContent = "Your best reaction time: " + best + " ms";
+        }
+    });
+</script>
+
+</body>
+</html>

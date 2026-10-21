@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Clicker</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: white;
+            color: #222;
+            padding: 30px 20px;
+        }
+
+        main {
+            max-width: 550px;
+            margin: 50px auto;
+        }
+
+        a {
+            color: #777;
+            text-decoration: none;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        #score {
+            font-size: 75px;
+            font-weight: bold;
+            margin: 35px 0 10px;
+        }
+
+        #timer {
+            font-size: 20px;
+            color: #777;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            padding: 17px 28px;
+        }
+
+        #clickButton {
+            width: 100%;
+            height: 180px;
+            margin-top: 25px;
+            background: #e9e5ff;
+            color: #4533bd;
+            font-size: 28px;
+            font-weight: bold;
+            transition: transform 0.08s;
+        }
+
+        #clickButton:active {
+            transform: scale(0.97);
+        }
+
+        #startButton {
+            background: #222;
+            color: white;
+            margin-top: 20px;
+        }
+
+        #message {
+            color: #777;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <a href="index.html">← Back to homepage</a>
+
+    <h1>🖱️ The Clicker</h1>
+    <p>How many times can you click in 10 seconds?</p>
+
+    <div id="score">0</div>
+    <div id="timer">Time: 10 seconds</div>
+
+    <button id="clickButton" disabled>CLICK!</button>
+    <br>
+    <button id="startButton">Start Challenge</button>
+
+    <div id="message">Get ready!</div>
+</main>
+
+<script>
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const clickButton = document.getElementById("clickButton");
+    const startButton = document.getElementById("startButton");
+    const message = document.getElementById("message");
+
+    let score = 0;
+    let timeLeft = 10;
+    let running = false;
+    let timerInterval;
+    let best = Number(localStorage.getItem("clickerBest")) || 0;
+
+    message.textContent = "Your personal best: " + best + " clicks.";
+
+    startButton.addEventListener("click", () => {
+        clearInterval(timerInterval);
+
+        score = 0;
+        timeLeft = 10;
+        running = true;
+
+        scoreDisplay.textContent = score;
+        timerDisplay.textContent = "Time: " + timeLeft + " seconds";
+        clickButton.disabled = false;
+        startButton.disabled = true;
+        startButton.textContent = "Challenge Running...";
+        message.textContent = "GO GO GO!";
+
+        const endTime = Date.now() + 10000;
+
+        timerInterval = setInterval(() => {
+            timeLeft = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+            timerDisplay.textContent = "Time: " + timeLeft + " seconds";
+
+            if (Date.now() >= endTime) {
+                finishGame();
+            }
+        }, 50);
+    });
+
+    clickButton.addEventListener("click", () => {
+        if (!running) return;
+
+        score++;
+        scoreDisplay.textContent = score;
+    });
+
+    function finishGame() {
+        clearInterval(timerInterval);
+        running = false;
+        clickButton.disabled = true;
+        startButton.disabled = false;
+        startButton.textContent = "Play Again";
+        timeLeft = 0;
+
+        timerDisplay.textContent = "Time's up!";
+
+        if (score > best) {
+            best = score;
+            localStorage.setItem("clickerBest", best);
+            message.textContent = "🏆 NEW PERSONAL BEST: " + score + " clicks!";
+        } else {
+            message.textContent = "You got " + score +
+                " clicks! Personal best: " + best + ".";
+        }
+    }
+</script>
+</body>
+</html>
